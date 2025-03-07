@@ -1,119 +1,97 @@
-# Echo MCP Server
+# Screenshot MCP Server
 
-A simple MCP server that provides text echo capabilities with optional case transformation.
-
-**[➡️ REPLACE: Update with your MCP server's name and short description]**
+An MCP server that provides screenshot capabilities for AI tools, allowing them to capture and process screen content.
 
 ## Overview
 
-This MCP server provides a text echo service that can return text exactly as provided or transform its case. It's designed to integrate with AI coding assistants and other tools that need simple text manipulation capabilities.
-
-**[➡️ REPLACE: Describe your MCP server's purpose and capabilities]**
+This MCP server enables AI tools to take screenshots of the user's screen, making it possible for AI assistants to see and analyze what the user is looking at. The server handles image capture, compression, and delivery in a format suitable for AI processing.
 
 ## Features
 
-- Echo text with exact preservation of input
-- Optional case transformation (upper, lower)
-- Support for both short and long text inputs
-- Fast, lightweight text processing
-
-**[➡️ REPLACE: List your MCP server's key features]**
+- Take full screen screenshots
+- Automatic JPEG compression for efficient transfer
+- Base64 encoded image data for reliable transmission
+- Support for both stdio and SSE transport modes
+- Configurable image quality and optimization
+- Simple command-line interface for testing
 
 ## Installation
-
-### From PyPI
-
-```bash
-# Install using UV (recommended)
-uv pip install echo-mcp-server
-
-# Or using pip
-pip install echo-mcp-server
-```
 
 ### From Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/username/echo-mcp-server.git
-cd echo-mcp-server
+git clone https://github.com/codingthefuturewithai/screenshot_mcp_server.git
+cd screenshot_mcp_server
 
-# Build the wheel
-python -m build --wheel
+# Install using UV (recommended)
+uv pip install -e .
 
-# Install the wheel
-uv pip install dist/*.whl
+# Or using pip
+pip install -e .
 ```
-
-**[➡️ REPLACE: Update package name, repository URL, and installation instructions for your MCP server]**
 
 ## Available Tools
 
-### echo
+### take_screenshot
 
-Description: Returns the input text, optionally transforming its case.
+Description: Takes a screenshot of the user's screen and returns it as a JPEG image.
 
-Parameters:
-
-- `text` (str): The text to echo back
-- `transform` (str, optional): Case transformation to apply. Options: "upper", "lower". Default: None
+Parameters: None
 
 Returns:
 
-- Text content with the original or transformed text
-
-Example Response:
-
-```json
-{
-  "type": "text",
-  "text": "Hello, World!",
-  "format": "text/plain"
-}
-```
-
-**[➡️ REPLACE: Document your MCP server's tools, including their parameters and return values]**
+- Image content in JPEG format, base64 encoded
 
 ## Usage
 
-After installation, you'll need to configure your AI tool to use this MCP server:
+The server can be used in two ways:
 
-1. Locate the MCP server wrapper script:
+### Command Line Client
 
-   ```bash
-   which echo-mcp-server
-   # Example output: /Users/username/.local/bin/echo-mcp-server
-   ```
+```bash
+# Take a screenshot and save it to a file
+screenshot_mcp_server-client output.jpg
+```
 
-2. Configure your AI tool (like Claude Desktop, Cursor, Windsurf, etc.) to use this MCP server. Refer to your AI tool's documentation for specific instructions on configuring MCP servers.
+### Programmatic Usage
 
-**[➡️ REPLACE: Update the wrapper script name to match your MCP server's name]**
+```python
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+async with stdio_client(StdioServerParameters(command="screenshot_mcp_server-server")) as (read, write):
+    async with ClientSession(read, write) as session:
+        result = await session.call_tool("take_screenshot")
+        # Process the screenshot data...
+```
 
 ## Requirements
 
 - Python 3.10 or later (< 3.13)
+- Dependencies:
+  - mcp >= 1.0.0
+  - pyautogui >= 0.9.54
+  - Pillow >= 10.0.0
 - Operating Systems: Linux, macOS, Windows
-
-**[➡️ REPLACE: Update with any additional requirements specific to your MCP server]**
 
 ## Configuration
 
-**[➡️ REPLACE: Document any environment variables, configuration files, or command-line options your MCP server supports. Remove this section if your server requires no configuration.]**
+The server supports two transport modes:
 
-## Troubleshooting
+- stdio (default): For command-line usage
+- SSE: For web-based applications, runs on port 3001 by default
 
-Common issues and their solutions:
+To run in SSE mode:
 
-**[➡️ REPLACE: Add troubleshooting guidance specific to your MCP server. Remove this section if not needed.]**
+```bash
+screenshot_mcp_server-server-sse --port 3001
+```
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## Author
 
-**[➡️ REPLACE: Add your name and contact information]**
-
----
-
-[Replace this example Echo server README with documentation specific to your MCP server. Use this structure as a template, but customize all sections to describe your server's actual functionality, tools, and configuration options.]
+Tim Kitchens (timkitch@codingthefuture.ai)
