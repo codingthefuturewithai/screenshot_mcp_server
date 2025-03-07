@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "screenshot_mcp_server"
+version = "0.1.0"
+description = "MCP Server that allows AI tools to take screenshots."
+readme = "README.md"
+authors = [
+    {name = "Tim Kitchens", email = "timkitch@codingthefuture.ai"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "mcp>=1.0.0",
+    "mcp[cli]>=1.0.0",
+    "anyio>=4.5",
+    "starlette>=0.36.0",
+    "uvicorn>=0.27.0",
+    "pyautogui>=0.9.54",
+    "Pillow>=10.0.0",
+]
+
+[project.scripts]
+screenshot_mcp_server-server = "screenshot_mcp_server.server.stdio:main"
+screenshot_mcp_server-server-sse = "screenshot_mcp_server.server.sse:main"
+screenshot_mcp_server-client = "screenshot_mcp_server.client.app:main"
+
+[tool.setuptools.packages.find]
+include = ["screenshot_mcp_server*"]
+namespaces = true 
